@@ -39,10 +39,10 @@ async def rename_handler(c: Client, m: Message):
         return
     await add_user_to_database(c, m)
     if (not m.reply_to_message) or (not m.reply_to_message.media):
-        return await m.reply_text("Reply to any media to rename it!", quote=True)
+        return await m.reply_text("<b>Reply to any media to rename it!</b>", quote=True)
 
     # Proceed
-    editable = await m.reply_text("Now send me new file name!", quote=True)
+    editable = await m.reply_text("<b>📝 Now send me new file name!</b>", quote=True)
     user_input_msg: Message = await c.listen(m.chat.id, timeout=300)
     if user_input_msg.text is None:
         await editable.edit("Process Cancelled!")
@@ -54,7 +54,7 @@ async def rename_handler(c: Client, m: Message):
         file_name = user_input_msg.text.rsplit(".", 1)[0][:255] + "." + get_media_file_name(m.reply_to_message).rsplit(".", 1)[-1].lower()
     else:
         file_name = user_input_msg.text[:255]
-    await editable.edit("Please Wait ...")
+    await editable.edit("<b>Please Wait It Will take Some time ...⏳</b>")
     file_type = get_file_type(m.reply_to_message)
     _c_file_id = FileId.decode(get_media_file_id(m.reply_to_message))
     try:
@@ -65,16 +65,16 @@ async def rename_handler(c: Client, m: Message):
             file_name=file_name,
             progress=progress_for_pyrogram,
             progress_args=(
-                "Uploading ...\n"
+                "<b>Uploading ...📤</b>\n"
                 f"DC: {_c_file_id.dc_id}",
                 editable,
                 c_time
             )
         )
         if not file_id:
-            return await editable.edit("Failed to Rename!")
+            return await editable.edit("<b>Failed to Rename!</b>")
 
-        await editable.edit("Sending to you ...")
+        await editable.edit("<b>Sending to you ...</b>")
 
         if file_type == "video":
             ttl_seconds = None
@@ -139,7 +139,7 @@ async def rename_handler(c: Client, m: Message):
                       if _f_thumb
                       else None)
             if thumbnail_file_id:
-                await editable.edit("Fetching Thumbnail ...")
+                await editable.edit("<b>Fetching Thumbnail 🔍...</b>")
                 thumb_path = await c.download_media(thumbnail_file_id,
                                                     f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
                 if _db_thumb:
@@ -215,7 +215,7 @@ async def rename_handler(c: Client, m: Message):
             else None
         caption = m.reply_to_message.caption.markdown \
             if m.reply_to_message.caption \
-            else "**Developer: @AbirHasan2005**"
+            else "**Developer: @Amal_PM**"
         parse_mode = "Markdown"
 
         try:
@@ -236,7 +236,7 @@ async def rename_handler(c: Client, m: Message):
             Config.LOGGER.getLogger(__name__).error(_err)
             Config.LOGGER.getLogger(__name__).info(f"{traceback.format_exc()}")
         else:
-            await editable.edit("Uploaded Successfully!")
+            await editable.edit("<b>✅ Uploaded Successfully!</b>")
     except Exception as err:
         await editable.edit("Failed to Rename File!\n\n"
                             f"**Error:** `{err}`\n\n"
