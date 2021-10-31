@@ -65,7 +65,7 @@ async def rename_handler(c: Client, m: Message):
             file_name=file_name,
             progress=progress_for_pyrogram,
             progress_args=(
-                "<b>Uploading ...📤</b>\n"
+                "Uploading ...📤\n"
                 f"DC: {_c_file_id.dc_id}",
                 editable,
                 c_time
@@ -103,7 +103,7 @@ async def rename_handler(c: Client, m: Message):
                       if _f_thumb
                       else None)
             if thumbnail_file_id:
-                await editable.edit("Fetching Thumbnail ...")
+                await editable.edit("<b>Fetching Thumbnail 🔍...</b>")
                 thumb_path = await c.download_media(thumbnail_file_id,
                                                     f"{Config.DOWNLOAD_DIR}/{m.from_user.id}/{m.message_id}/")
                 if _db_thumb:
